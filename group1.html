@@ -15,6 +15,53 @@
     <div id="map"></div>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script>
+        function init() {
+    // Mapboxのアクセストークンを設定
+    mapboxgl.accessToken = 'your_mapbox_access_token_here';
+
+    // 地図を初期化
+    const map = new mapboxgl.Map({
+        container: 'map', // コンテナのID
+        style: 'mapbox://styles/mapbox/streets-v11', // スタイルのURL
+        center: [139.6917, 35.6895], // 開始位置[経度, 緯度]
+        zoom: 10 // 開始時のズームレベル
+    });
+
+    // 地図にズームと回転のコントロールを追加
+    map.addControl(new mapboxgl.NavigationControl());
+
+    // 言語切替ボタンのイベントリスナー
+    document.getElementById('btnEnglish').addEventListener('click', function() {
+        setLanguage('en');
+    });
+    document.getElementById('btnJapanese').addEventListener('click', function() {
+        setLanguage('ja');
+    });
+
+    // 地図の言語を設定
+    function setLanguage(lang) {
+        map.setStyle('mapbox://styles/mapbox/' + lang + '-v11');
+    }
+
+    // マーカー用のサンプルデータ
+    const locations = [
+        {id: 1, name: 'Location 1', coordinates: [139.6917, 35.6895]},
+        {id: 2, name: 'Location 2', coordinates: [139.7302, 35.6852]}
+    ];
+
+    // 地図にマーカーを追加
+    locations.forEach(function(location) {
+        const el = document.createElement('div');
+        el.className = 'marker';
+        el.innerHTML = location.name;
+
+        // マーカーを作成し地図に追加
+        new mapboxgl.Marker(el)
+            .setLngLat(location.coordinates)
+            .addTo(map);
+    });
+}
+
         var map = L.map('map').setView([35.857428, 139.902073], 15); // 地図の中心とズームレベル
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
